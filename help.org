@@ -2,6 +2,7 @@
 https://scicomp.ethz.ch/wiki/Getting_started_with_clusters
 * Submit interactive pseudoterminal job, bash
 bsub -Is bash
+bsub -n 4 -R "rusage[mem=16000]" -Is bash
 
 * Submit bash job non interactive
 bsub -n 2 -W 48:00 -J "filtbeag" -R "rusage[mem=16384]" -oo filtbeag.stout -eo filtbeag.sterr 'bash ~/pro/300_analyses/script/300_analyses/pop_filters.sh'
@@ -64,5 +65,11 @@ $LSB_JOBID
   %EI - execution index
 - *example*
   bsub -outdir "%U/%J_%I" myprog/n
-
- 
+* Use screen for long running interactive jobs
+  Max time for interactive jobs is 24:00 h
+  ssh euler13
+  screen
+  bsub [[Submit interactive pseudoterminal job, bash]]
+  C-a C-d to detach
+  screen -r to reattach
+  screen -ls to list
