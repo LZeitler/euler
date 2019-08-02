@@ -1,41 +1,49 @@
 * General intro
 https://scicomp.ethz.ch/wiki/Getting_started_with_clusters
 * Submit interactive pseudoterminal job, bash
+#+BEGIN_SRC bash
 bsub -Is bash
 bsub -n 4 -R "rusage[mem=16000]" -Is bash
+#+END_SRC
 
 * Submit bash job non interactive
+#+BEGIN_SRC bash
 bsub -n 2 -W 48:00 -J "filtbeag" -R "rusage[mem=16384]" -oo filtbeag.stout -eo filtbeag.sterr 'bash ~/pro/300_analyses/script/300_analyses/pop_filters.sh'
+#+END_SRC
 
 * Submit interactive R shell job
+#+BEGIN_SRC bash
 module load new gcc/4.8.2 r/3.5.1
 bsub -Ip R
 bsub -Ip R -R "rusage[mem=16384]" -n 2
 bsub -n 4 -W 08:00 -R "rusage[mem=16000]" -Is R 
+#+END_SRC
 ** with X11 Forwarding (does not work)
-bsub -XF -n 2 -W 8:00 -R "rusage[mem=16000]" -Is R  
+~bsub -XF -n 2 -W 8:00 -R "rusage[mem=16000]" -Is R~
 
 * Submit shell script as array
-bsub -J "testscr[1-16]" './scripts/testsc.sh $LSB_JOBINDEX'
-refer in the script to 1st arg as $1 ;; THIS WILL BE THE JOB INDEX, ranging from 1 to 16
+~bsub -J "testscr[1-16]" './scripts/testsc.sh $LSB_JOBINDEX'~
+refer in the script to 1st arg as ~$1~; THIS WILL BE THE JOB INDEX, e.g., a range of arguments or files
 
 * Submit interactive python job on GPU
 # module load python_gpu/3.6.1  # default in bashrc on leonhard
-bsub -n 1 -W 04:00 -R "rusage[mem=2000, ngpus_excl_p=1]" -Is python
+~bsub -n 1 -W 04:00 -R "rusage[mem=2000, ngpus_excl_p=1]" -Is python~
 
 * Submit GPU job
+#+BEGIN_SRC bash
 bsub -n 4 -W 24:00 -R "rusage[mem=8000, ngpus_excl_p=4]" ./run_everything.sh
 # this runs on 4 cores with each 8GB and 4 GPUs (4 GPUs here probably not required)
 
 bsub -J "recpop[1-16]%2" -n 4 -W 96:00 -R "rusage[mem=8000, ngpus_excl_p=4]" -oo logs/filtbeag.stdout -eo logs/filtbeag.stderr './pro/300_analyses/relernn/run_everything_pops.sh $LSB_JOBINDEX'
 
 bsub -J "recpol[1-16]" -n 4 -W 96:00 -R "rusage[mem=8000, ngpus_excl_p=1, scratch=10000]" -oo logs/%J_%I.stdout -eo logs/%J_%I.stderr './pro/300_analyses/relernn/run_everything_pops_localscratch.sh $LSB_JOBINDEX'
+#+END_SRC
 
 * Use local scratch for best performance
-bsub -R "rusage[scratch=10000]"   # YYY in MB for local space requirements, use $TEMPDIR as dir
+~bsub -R "rusage[scratch=10000]"~ YYY in MB for local space requirements, use $TEMPDIR as dir
 
 * Submit R job
-bsub -n 2 -W 10:00 -J "hapmaker" -R "rusage[mem=16384]" "R --vanilla < /cluster/home/zeitlerl/ma/r/hapmaker_olddata_120419.R > hapmaker.out"
+~bsub -n 2 -W 10:00 -J "hapmaker" -R "rusage[mem=16384]" "R --vanilla < /cluster/home/zeitlerl/ma/r/hapmaker_olddata_120419.R > hapmaker.out"~
 
 * virtualenv
   install virtualenv when using first time:
@@ -54,22 +62,22 @@ bsub -n 2 -W 10:00 -J "hapmaker" -R "rusage[mem=16384]" "R --vanilla < /cluster/
 * run pip for install
   python -m pip install --user h5py
 * access lsb variables while running
-e.g.: 
-$LSB_JOBNAME
-$LSB_JOBID
+  e.g.: 
+  ~$LSB_JOBNAME~
+  ~$LSB_JOBID~
 
 - outdir can be combined with (e.g.)
-  %J - job ID
-  %I - index (default value is 0)
-  %EJ - execution job ID
-  %EI - execution index
+  - %J - job ID
+  - %I - index (default value is 0)
+  - %EJ - execution job ID
+  - %EI - execution index
 - *example*
-  bsub -outdir "%U/%J_%I" myprog/n
+  - ~bsub -outdir "%U/%J_%I" myprog/n~
 * Use screen for long running interactive jobs
-  Max time for interactive jobs is 24:00 h
-  ssh euler13
-  screen
-  bsub [[Submit interactive pseudoterminal job, bash]]
-  C-a C-d to detach
-  screen -r to reattach
-  screen -ls to list
+  /Max time for interactive jobs is 24:00 h/
+  - ~ssh euler13~
+  - ~screen~
+  - ~bsub ...~ [[Submit interactive pseudoterminal job, bash]]
+  - C-a C-d to detach
+  - ~screen -r~ to reattach
+  - ~screen -ls~ to list
