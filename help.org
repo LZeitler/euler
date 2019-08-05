@@ -81,3 +81,6 @@ bsub -J "recpol[1-16]" -n 4 -W 96:00 -R "rusage[mem=8000, ngpus_excl_p=1, scratc
   - C-a C-d to detach
   - ~screen -r~ to reattach
   - ~screen -ls~ to list
+
+* Modify job runtime after submit
+  ~bmod -W 120:00 <JobID>~
