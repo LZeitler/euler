@@ -88,4 +88,4 @@ bsub -J "recpol[1-16]" -n 4 -W 96:00 -R "rusage[mem=8000, ngpus_excl_p=1, scratc
   ~bpeek JOBID
   bpeek -J JOBNAME~
 * Find out why job is not starting
-  ~bmod -wn JOBID~
+  ~bjobs -p JOBID~
