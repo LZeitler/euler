@@ -54,6 +54,12 @@ bsub -J "recpol[1-16]" -n 4 -W 96:00 -R "rusage[mem=8000, ngpus_excl_p=1, scratc
   ~source venv/bin/activate~
 
   ... pip more stuff with regular ~pip install ... --user~
+* install locally with pip instead of easyinstall setup.py
+#+BEGIN_SRC bash
+cd <installdir>
+python -m pip install --user .
+#+END_SRC
+
 * Request GPU 
   [[*Submit interactive python job on GPU][Submit interactive python job on GPU
 ]]
