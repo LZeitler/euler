@@ -91,6 +91,7 @@ python -m pip install --user .
 
 * Modify job runtime after submit
   ~bmod -W 120:00 <JobID>~
+  This resets the time. It does not extend it. Set a longer time then initially requested to extend job time.
 * Find out what a job is writing while its running
   ~bpeek JOBID
   bpeek -J JOBNAME~
